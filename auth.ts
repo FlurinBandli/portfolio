@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
+import type { JWT } from "next-auth/jwt";
+import type { Session } from "next-auth";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -33,6 +35,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     authorized({ auth }) {
       return !!auth;
+    },
+    async jwt({ token, account }): Promise<JWT> {
+      if (account?.provider) {
+        token.provider = account.provider;
+      }
+      return token;
+    },
+    async session({ session, token }): Promise<Session> {
+      session.provider = token.provider;
+      return session;
     },
   },
 });
