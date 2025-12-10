@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
-type CreateRowButtonProps = {
+type CreateRowProps = {
   onCreateRow: (data: Omit<AdminRow, "id">) => void;
 };
 
@@ -37,7 +37,7 @@ const formSchema = z.object({
   url: z.url("Invalid URL"),
 });
 
-const CreateRowButton = ({ onCreateRow }: CreateRowButtonProps) => {
+const CreateRow = ({ onCreateRow }: CreateRowProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -133,4 +133,4 @@ const CreateRowButton = ({ onCreateRow }: CreateRowButtonProps) => {
   );
 };
 
-export default CreateRowButton;
+export default CreateRow;

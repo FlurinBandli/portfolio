@@ -7,7 +7,8 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import EditRow from "@/components/admin/edit-row";
 
 export type AdminRow = {
   id: number;
@@ -26,26 +27,43 @@ const columns = [
   { key: "url", label: "URL" },
 ] as const;
 
-export function AdminTable({ rows }: { rows: AdminRow[] }) {
+export function AdminTable({
+  rows,
+  selectedRow,
+  onRowClick,
+  onCloseSheet,
+  onEditRow,
+}: {
+  rows: AdminRow[];
+  selectedRow: AdminRow | null;
+  onRowClick: (row: AdminRow) => void;
+  onCloseSheet: () => void;
+  onEditRow: (id: number, data: Omit<AdminRow, "id">) => void;
+}) {
   return (
     <div className="overflow-hidden rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {columns.map((column) => (
-              <TableHead key={column.key}>{column.label}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
+      <Sheet
+        open={!!selectedRow}
+        onOpenChange={(open) => {
+          if (!open) onCloseSheet();
+        }}
+      >
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {columns.map((column) => (
+                <TableHead key={column.key}>{column.label}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
 
-        <Sheet>
           <TableBody>
             {rows.map((row) => (
               <TableRow key={row.id}>
                 <TableCell>
-                  <Checkbox className="l-2">test</Checkbox>
+                  <Checkbox />
                 </TableCell>
-                <SheetTrigger asChild>
+                <SheetTrigger onClick={() => onRowClick(row)} asChild>
                   <TableCell>{row.id}</TableCell>
                 </SheetTrigger>
                 <TableCell>{row.first_name}</TableCell>
@@ -55,9 +73,22 @@ export function AdminTable({ rows }: { rows: AdminRow[] }) {
               </TableRow>
             ))}
           </TableBody>
-          <SheetContent side="left">placeholder</SheetContent>
-        </Sheet>
-      </Table>
+        </Table>
+        <SheetContent side="left" className="pl-4">
+          <SheetHeader>
+            <SheetTitle>Edit row</SheetTitle>
+          </SheetHeader>
+          {selectedRow && (
+            <EditRow
+              row={selectedRow}
+              onEditRow={(id, data) => {
+                onEditRow(id, data);
+                onCloseSheet();
+              }}
+            />
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
