@@ -12,11 +12,24 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialogTrigger,
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 type EditRowProps = {
   row: AdminRow;
   onEditRow: (id: number, data: Omit<AdminRow, "id">) => void;
+  onDeleteRow: (id: number) => void;
+  onCancel: () => void;
 };
 
 const formSchema = z.object({
@@ -26,7 +39,7 @@ const formSchema = z.object({
   url: z.url("Invalid URL"),
 });
 
-const EditRow = ({ row, onEditRow }: EditRowProps) => {
+export function EditRow({ row, onEditRow, onCancel, onDeleteRow }: EditRowProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,6 +52,15 @@ const EditRow = ({ row, onEditRow }: EditRowProps) => {
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     onEditRow(row.id, values);
+  };
+
+  const handleCancel = () => {
+    form.reset();
+    onCancel();
+  };
+
+  const handleDelete = () => {
+    onDeleteRow(row.id);
   };
 
   return (
@@ -99,13 +121,28 @@ const EditRow = ({ row, onEditRow }: EditRowProps) => {
             )}
           ></FormField>
           <Button type="submit">Save</Button>
-          <Button variant="ghost" type="button" onClick={() => form.reset()}>
+          <Button variant="ghost" type="button" onClick={handleCancel}>
             Cancel
           </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" type="button">
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to delete this row?</AlertDialogTitle>
+                <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </form>
       </Form>
     </div>
   );
-};
-
-export default EditRow;
+}

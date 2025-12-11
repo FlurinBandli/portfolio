@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { AdminRow, AdminTable } from "@/components/admin/admin-table";
-import CreateRow from "@/components/admin/create-row";
+import { CreateRow } from "@/components/admin/create-row";
 
-const AdminDashboard = ({ initialRows }: { initialRows: AdminRow[] }) => {
+export function AdminDashboard({ initialRows }: { initialRows: AdminRow[] }) {
   const [rows, setRows] = useState<AdminRow[]>(initialRows);
   const [selectedRow, setSelectedRow] = useState<AdminRow | null>(null);
 
@@ -22,6 +22,15 @@ const AdminDashboard = ({ initialRows }: { initialRows: AdminRow[] }) => {
     setRows((prev) => prev.map((row) => (row.id === id ? { id, ...data } : row)));
   };
 
+  const handleDeleteRow = (id: number) => {
+    setRows((prev) => prev.filter((row) => row.id !== id));
+    setSelectedRow(null);
+  };
+
+  const handleCloseSheet = () => {
+    setSelectedRow(null);
+  };
+
   return (
     <div>
       <div className="flex justify-end mb-2">
@@ -32,9 +41,9 @@ const AdminDashboard = ({ initialRows }: { initialRows: AdminRow[] }) => {
         selectedRow={selectedRow}
         onRowClick={setSelectedRow}
         onEditRow={handleEditRow}
-        onCloseSheet={() => setSelectedRow(null)}
+        onCloseSheet={handleCloseSheet}
+        onDeleteRow={handleDeleteRow}
       />
     </div>
   );
-};
-export default AdminDashboard;
+}

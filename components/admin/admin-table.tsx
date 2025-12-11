@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import EditRow from "@/components/admin/edit-row";
+import { EditRow } from "@/components/admin/edit-row";
 
 export type AdminRow = {
   id: number;
@@ -33,12 +33,14 @@ export function AdminTable({
   onRowClick,
   onCloseSheet,
   onEditRow,
+  onDeleteRow,
 }: {
   rows: AdminRow[];
   selectedRow: AdminRow | null;
   onRowClick: (row: AdminRow) => void;
   onCloseSheet: () => void;
   onEditRow: (id: number, data: Omit<AdminRow, "id">) => void;
+  onDeleteRow: (id: number) => void;
 }) {
   return (
     <div className="overflow-hidden rounded-md border">
@@ -85,6 +87,11 @@ export function AdminTable({
                 onEditRow(id, data);
                 onCloseSheet();
               }}
+              onDeleteRow={(id) => {
+                onDeleteRow(id);
+                onCloseSheet();
+              }}
+              onCancel={onCloseSheet}
             />
           )}
         </SheetContent>

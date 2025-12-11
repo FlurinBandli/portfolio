@@ -14,7 +14,7 @@ import { auth } from "@/auth";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
-const SystemInfoSheet = async () => {
+export async function SystemInfoSheet() {
   const session = (await auth()) as { provider?: string; expires?: string } | null | undefined;
   const nextVersion = nextPackage.version;
   const nodeVersion = process.version;
@@ -55,6 +55,4 @@ const SystemInfoSheet = async () => {
       </SheetContent>
     </Sheet>
   );
-};
-
-export default SystemInfoSheet;
+}

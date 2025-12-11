@@ -22,7 +22,7 @@ const loginFormSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
-const LoginForm = () => {
+export function LoginForm() {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -87,6 +87,4 @@ const LoginForm = () => {
       </Form>
     </div>
   );
-};
-
-export default LoginForm;
+}

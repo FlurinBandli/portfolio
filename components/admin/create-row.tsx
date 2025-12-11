@@ -37,7 +37,7 @@ const formSchema = z.object({
   url: z.url("Invalid URL"),
 });
 
-const CreateRow = ({ onCreateRow }: CreateRowProps) => {
+export function CreateRow({ onCreateRow }: CreateRowProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -131,6 +131,4 @@ const CreateRow = ({ onCreateRow }: CreateRowProps) => {
       </SheetContent>
     </Sheet>
   );
-};
-
-export default CreateRow;
+}
