@@ -1,7 +1,9 @@
+import { AdminAreaChart } from "@/components/admin/area-chart";
+
 export default function AdminPage() {
   return (
     <div>
-      <h1>Placeholder</h1>
+      <AdminAreaChart />
     </div>
   );
 }
