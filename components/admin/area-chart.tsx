@@ -67,9 +67,6 @@ export function AdminAreaChart() {
           />
         </AreaChart>
       </ChartContainer>
-      <div>
-        <p>Gitlab commits with messages or blog posts</p>
-      </div>
     </div>
   );
 }
